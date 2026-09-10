@@ -10,8 +10,8 @@
             <label for="keterangan">Keterangan</label>
             <input type="text" class="form-control" id="keterangan" name="keterangan" required>
         </div>
-        <button type="submit" class="btn btn-primary">Simpan</button>
-        <button type="button" class="btn btn-secondary" onclick="window.history.back();">Batal</button>
+        <button type="submit" class="btn btn-primary mt-3">Simpan</button>
+        <button type="button" class="btn btn-secondary mt-3" onclick="window.history.back();">Batal</button>
     </form>
 </div>
 
