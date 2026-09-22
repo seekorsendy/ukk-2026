@@ -26,6 +26,16 @@ body {
     font-weight: 700;
 }
 
+.wrapper-bersebelahan {
+  display: flex;
+  gap: 20px; /* Jarak antar card */
+  width: 100%;
+}
+
+.wrapper-bersebelahan .card {
+  flex: 1; /* Membuat kedua card membagi lebar secara merata */
+}
+
 /* Navbar -- link aktif vs non-aktif */
 .navbar-nav .nav-link {
     position: relative;
