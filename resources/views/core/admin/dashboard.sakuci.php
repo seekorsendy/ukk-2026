@@ -68,14 +68,14 @@
                         <a href="#" class="list-group-item rounded-3 active py-2.5 px-3 fw-medium">
                             <i class="bi bi-speedometer2 me-2"></i> Dashboard
                         </a>
-                        <a href="{{ route('admin.roles.index') }}" class="list-group-item rounded-3 py-2.5 px-3 fw-medium">
-                            <i class="bi bi-shield-check me-2"></i> Manage Role
+                        <a href="{{ route('kategori.index') }}" class="list-group-item rounded-3 py-2.5 px-3 fw-medium">
+                            <i class="bi bi-shield-check me-2"></i> Kategori
                         </a>
-                        <a href="{{ route('admin.users.index') }}" class="list-group-item rounded-3 py-2.5 px-3 fw-medium">
-                            <i class="bi bi-people me-2"></i> Manage User
+                        <a href="{{ route('alat.index') }}" class="list-group-item rounded-3 py-2.5 px-3 fw-medium">
+                            <i class="bi bi-people me-2"></i> Alat
                         </a>
-                        <a href="{{ route('admin.database.export') }}" class="list-group-item rounded-3 py-2.5 px-3 fw-medium">
-                            <i class="bi bi-database-down me-2"></i> Download Database
+                        <a href="{{ route('peminjaman.index') }}" class="list-group-item rounded-3 py-2.5 px-3 fw-medium">
+                            <i class="bi bi-database-down me-2"></i>Peminjaman
                         </a>
                     </div>
                 </div>
