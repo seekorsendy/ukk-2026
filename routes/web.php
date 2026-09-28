@@ -18,9 +18,9 @@ use Sakuci\Route;
 | Daftarkan seluruh route aplikasi di sini.
 |
 | Cara menulis action:
-|   [HomeController::class, 'index']   -> disarankan
-|   'HomeController@index'             -> namespace App\Controllers otomatis
-|   function () { ... }                -> closure
+|   [HomeController::class, 'index']    -> disarankan
+|   'HomeController@index'            -> namespace App\Controllers otomatis
+|   function () { ... }               -> closure
 */
 
 Route::get('/', function () {
@@ -72,11 +72,19 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::delete('/alat/{id_alat}', [alatController::class, 'delete'] )->name('alat.delete');
 
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
-Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
-Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
-Route::get('/peminjaman/{id}/edit', [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
-Route::post('/peminjaman/{id}/update', [PeminjamanController::class, 'update'])->name('peminjaman.update');
-Route::post('/peminjaman/{id}/delete', [PeminjamanController::class, 'delete'])->name('peminjaman.delete');
+    Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
+    Route::post('/peminjaman', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+    Route::get('/peminjaman/{id}/edit', [PeminjamanController::class, 'edit'])->name('peminjaman.edit');
+    Route::post('/peminjaman/{id}/update', [PeminjamanController::class, 'update'])->name('peminjaman.update');
+    Route::post('/peminjaman/{id}/delete', [PeminjamanController::class, 'delete'])->name('peminjaman.delete');
+
+    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
+    Route::get('/pengembalian/create', [PengembalianController::class, 'create'])->name('pengembalian.create');
+    Route::post('/pengembalian', [PengembalianController::class, 'store'])->name('pengembalian.store');
+    Route::get('/pengembalian/{id}/edit', [PengembalianController::class, 'edit'])->name('pengembalian.edit');
+    Route::post('/pengembalian/{id}/update', [PengembalianController::class, 'update'])->name('pengembalian.update');
+    Route::post('/pengembalian/{id}/delete', [PengembalianController::class, 'delete'])->name('pengembalian.delete');
+
 });
 
 /*
@@ -92,24 +100,21 @@ Route::post('/peminjaman/{id}/delete', [PeminjamanController::class, 'delete'])-
 // @role:siswa:start
 Route::group(['prefix' => 'siswa', 'middleware' => 'siswa'], function () {
     Route::get('/', [DashboardController::class, 'index'])->name('siswa.dashboard');
+    
+    // Rute khusus siswa/peminjam mengajukan peminjaman alat
+    Route::get('/peminjam', [PeminjamanController::class, 'indexPeminjam'])->name('peminjam.indexPeminjam');
+    Route::get('/peminjam/ajukan', [PeminjamanController::class, 'createPeminjam'])->name('peminjam.createPeminjam');
+    Route::post('/peminjam/ajukan', [PeminjamanController::class, 'storePeminjam'])->name('peminjam.storePeminjam');
 });
 // @role:siswa:end
+// @role:peminjam:start
+Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('peminjam.dashboard');
+});
+// @role:peminjam:end
+// @role:petugas:start
+Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
+    Route::get('/', [DashboardController::class, 'index'])->name('petugas.dashboard');
+});
+// @role:petugas:end
 // @generated-roles:end
-
-/*
-|--------------------------------------------------------------------------
-| Contoh (hapus/ubah sesuai kebutuhan)
-|--------------------------------------------------------------------------
-|
-| use App\Controllers\BukuController;
-|
-| Route::get('/buku', [BukuController::class, 'index'])->name('buku.index');
-|
-| // Tujuh route CRUD sekaligus: index, create, store, show, edit, update, destroy
-| // Route::resource
-|
-| // Group dengan prefix dan middleware bersama
-| Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function () {
-|     Route::get('/dashboard', [DashboardController::class, 'index']);
-| });
-*/
