@@ -17,8 +17,8 @@
                     @php
                         $currentUser = \App\Models\User::current();
                         $isPengguna = $currentUser && ($currentUser->role == 'pengguna');
-                        $storeRoute = $isPengguna ? route('peminjaman.storePeminjam.pengguna') : route('peminjaman.storePeminjam');
-                        $indexRoute = $isPengguna ? route('peminjaman.indexPeminjam.pengguna') : route('peminjaman.indexPeminjam');
+                        $storeRoute = $isPengguna ? route('peminjam.storePeminjam.pengguna') : route('peminjam.storePeminjam');
+                        $indexRoute = $isPengguna ? route('peminjam.indexPeminjam.pengguna') : route('peminjam.indexPeminjam');
                     @endphp
 
                     <form action="{{ $storeRoute }}" method="POST">

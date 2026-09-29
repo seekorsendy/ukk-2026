@@ -17,7 +17,6 @@ class PeminjamanController
     public function index(Request $request)
     {
         $datap = Peminjaman::orderBy('id_peminjaman', 'desc')->paginate(4);
-         $alat = Alat::all();
         return view('peminjaman.index', compact('datap'));
     }
 
@@ -65,7 +64,18 @@ class PeminjamanController
             return redirect(route('peminjaman.index'))->with('error', 'Data peminjaman tidak ditemukan.');
         }
 
-        $peminjaman->update($request->all());
+        // Ambil semua request
+        $input = $request->all();
+
+        // Mencegah error SQL Incorrect integer value jika input kosong
+        if (empty($input['id_alat'])) {
+            $input['id_alat'] = $peminjaman->id_alat;
+        }
+        if (empty($input['id_user'])) {
+            $input['id_user'] = $peminjaman->id_user;
+        }
+
+        $peminjaman->update($input);
 
         return redirect(route('peminjaman.index'))->with('success', 'Data peminjaman berhasil diperbarui!');
     }
