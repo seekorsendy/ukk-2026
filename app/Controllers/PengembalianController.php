@@ -8,6 +8,7 @@ use App\Models\Pengembalian;
 use App\Models\Peminjaman;
 use App\Models\User;
 use App\Models\Alat;
+use App\Models\LogAktifitas;
 
 class PengembalianController extends Controller
 {
@@ -85,6 +86,13 @@ class PengembalianController extends Controller
         $peminjaman = Peminjaman::findOrFail($validatedData['id_peminjaman']);
         $peminjaman->update(['status' => 'Dikembalikan']);
 
+        // MENCATAT LOG: Admin/Petugas mencatat pengembalian
+        $currentUser = User::current();
+        LogAktifitas::create([
+            'id_user'   => $currentUser->id ?? null,
+            'aktifitas' => 'Petugas/Admin mencatat pengembalian alat (Peminjaman ID: ' . $validatedData['id_peminjaman'] . ').'
+        ]);
+
         return redirect(route('pengembalian.index'))->with('success', 'Data pengembalian berhasil ditambahkan.');
     }
 
@@ -129,6 +137,13 @@ class PengembalianController extends Controller
         $pengembalian = Pengembalian::findOrFail($id_pengembalian);
         $pengembalian->update($validatedData);
 
+        // MENCATAT LOG: Admin/Petugas memperbarui data pengembalian
+        $currentUser = User::current();
+        LogAktifitas::create([
+            'id_user'   => $currentUser->id ?? null,
+            'aktifitas' => 'Petugas/Admin memperbarui data pengembalian (ID: ' . $id_pengembalian . ').'
+        ]);
+
         return redirect(route('pengembalian.index'))->with('success', 'Data pengembalian berhasil diubah.');
     }
 
@@ -138,6 +153,75 @@ class PengembalianController extends Controller
         $pengembalian = Pengembalian::findOrFail($id_pengembalian);
         $pengembalian->delete();
 
+        // MENCATAT LOG: Admin/Petugas menghapus data pengembalian
+        $currentUser = User::current();
+        LogAktifitas::create([
+            'id_user'   => $currentUser->id ?? null,
+            'aktifitas' => 'Petugas/Admin menghapus data pengembalian (ID: ' . $id_pengembalian . ').'
+        ]);
+
         return redirect(route('pengembalian.index'))->with('success', 'Data pengembalian berhasil dihapus.');
+    }
+
+    // =========================================================================
+    // TAMBAHAN KHUSUS UNTUK ROLE PEMINJAM
+    // =========================================================================
+
+    // 7. Tampil Form Pengembalian (Khusus Peminjam)
+    public function createPeminjam(Request $request)
+    {
+        $user = User::current();
+        if (!$user) {
+            return redirect(route('login'))->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $id_user = $user->id ?? $user->id_user;
+
+        // Ambil data alat yang sedang dipinjam oleh user ini
+        $peminjamanAktif = Peminjaman::where('id_user', $id_user)
+                                     ->whereIn('status', ['Dipinjam', 'Disetujui', 'dipinjam', 'disetujui'])
+                                     ->get();
+
+        // Menyisipkan relasi alat secara manual agar nama alatnya muncul di dropdown
+        foreach ($peminjamanAktif as $p) {
+            $p->alat = Alat::where('id_alat', $p->id_alat)->first();
+        }
+
+        return view('peminjam.pengembalian', compact('user', 'peminjamanAktif'));
+    }
+
+    // 8. Simpan Pengajuan Pengembalian (Khusus Peminjam)
+    public function storePeminjam(Request $request)
+    {
+        $currentUser = User::current();
+        if (!$currentUser) {
+            return redirect(route('login'))->with('error', 'Silakan login terlebih dahulu.');
+        }
+
+        $validatedData = $request->validate([
+            'id_peminjaman'        => 'required|integer',
+            'tanggal_pengembalian' => 'required|date',
+            'kondisi_barang'       => 'nullable|string|max:100',
+            'catatan'              => 'nullable|string',
+        ]);
+
+        // Set nilai default
+        $validatedData['terlambat_hari'] = 0;
+        $validatedData['denda']          = 0;
+        $validatedData['kondisi_barang'] = $validatedData['kondisi_barang'] ?? 'Baik';
+
+        Pengembalian::create($validatedData);
+
+        // Update status peminjaman menjadi 'Dikembalikan'
+        $peminjaman = Peminjaman::findOrFail($validatedData['id_peminjaman']);
+        $peminjaman->update(['status' => 'Dikembalikan']);
+
+        // MENCATAT LOG: Peminjam mengajukan pengembalian
+        LogAktifitas::create([
+            'id_user'   => $currentUser->id,
+            'aktifitas' => 'Peminjam ' . ($currentUser->username ?? 'Siswa') . ' mengajukan pengembalian alat.'
+        ]);
+
+        return redirect(route('peminjam.riwayat'))->with('success', 'Pengajuan pengembalian berhasil dikirim.');
     }
 }

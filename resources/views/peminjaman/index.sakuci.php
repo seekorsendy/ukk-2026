@@ -5,7 +5,6 @@
 @section('content')
 <div class="container-fluid py-4 px-4">
     
-    
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
             <h3 class="fw-bold mb-1 tracking-tight">Daftar Peminjaman Alat</h3>
@@ -17,7 +16,6 @@
         </a>
     </div>
 
-    
     <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
         <div class="card-body p-0">
             <div class="table-responsive">
@@ -38,13 +36,24 @@
                     <tbody>
                         @php $no = 1; @endphp
                         @forelse ($datap as $peminjaman)
+                        @php
+                            // Ambil data user/peminjam dengan mencakup semua kemungkinan nama kolom (name, nama, username, email)
+                            $userIdVal = $peminjaman->id_user ?? $peminjaman->user_id ?? null;
+                            $userObj = $peminjaman->user ?? ($userIdVal ? \App\Models\User::find($userIdVal) : null);
+                            $namaUserFinal = $userObj->name ?? $userObj->nama ?? $userObj->username ?? $userObj->email ?? ($userIdVal ? 'User #' . $userIdVal : 'Tanpa Nama');
+
+                            // Ambil data alat & ikon kotak sudah dihapus
+                            $alatIdVal = $peminjaman->id_alat ?? $peminjaman->alat_id ?? null;
+                            $alatObj = $peminjaman->alat ?? ($alatIdVal ? \App\Models\Alat::find($alatIdVal) : null);
+                            $namaAlatFinal = $alatObj->nama_alat ?? $alatObj->nama ?? $alatObj->name ?? ($alatIdVal ? 'Alat #' . $alatIdVal : 'Alat Tidak Diketahui');
+                        @endphp
                         <tr>
                             <td class="px-4 text-center text-body-secondary fw-medium fs-7">{{ $no++ }}</td>
                             <td class="px-3">
-                                <div class="fw-semibold text-body fs-7">{{ $peminjaman->user->nama ?? 'User ID: ' . $peminjaman->id_user }}</div>
+                                <div class="fw-semibold text-body fs-7"> {{ $namaUserFinal }}</div>
                             </td>
                             <td class="px-3">
-                                <div class="fw-semibold text-body fs-7">{{ $peminjaman->alat->nama_alat ?? 'Alat ID: ' . $peminjaman->id_alat }}</div>
+                                <div class="fw-semibold text-body fs-7">{{ $namaAlatFinal }}</div>
                             </td>
                             <td class="px-3">
                                 <span class="badge bg-body-tertiary text-body border font-monospace fw-semibold px-2.5 py-1.5 rounded-2 fs-8">
@@ -80,7 +89,7 @@
                                     </a>
                                     <form action="{{ route('peminjaman.delete', ['id_peminjaman' => $peminjaman->id_peminjaman]) }}" method="POST" class="d-inline m-0">
                                         @csrf
-                                        @method('DELETE')
+                                        @method('POST')
                                         <button type="submit" class="btn btn-sm btn-outline-danger fw-semibold px-3 py-1.5 rounded-3 d-inline-flex align-items-center gap-1.5 fs-7 shadow-2xs" onclick="return confirm('Apakah Anda yakin ingin menghapus data peminjaman ini?')">
                                             <i class="bi bi-trash"></i> Hapus
                                         </button>
@@ -102,7 +111,6 @@
                 </table>
             </div>
         </div>
-        
         
         @if(method_exists($datap, 'hasPages') && $datap->hasPages())
         <div class="card-footer bg-transparent py-3 border-top-0 d-flex justify-content-end">
