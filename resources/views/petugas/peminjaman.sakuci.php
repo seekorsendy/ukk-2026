@@ -4,6 +4,7 @@
 
 @section('content')
 <div class="container-fluid px-4 px-lg-5 py-4">
+    <!-- Header Halaman + Tombol Cetak Laporan -->
     <div class="d-flex align-items-center justify-content-between mb-4">
         <div>
             <span class="badge bg-primary-subtle text-primary px-3 py-2 rounded-pill fw-medium mb-2 border border-primary-subtle">
@@ -11,6 +12,13 @@
             </span>
             <h2 class="fw-bold text-body mb-1">Persetujuan Peminjaman Alat</h2>
             <p class="text-body-secondary mb-0 small">Daftar pengajuan peminjaman dari peminjam yang menunggu verifikasi.</p>
+        </div>
+        <div>
+            <!-- Tombol Cetak Laporan -->
+            <a href="/petugas/peminjaman/cetak" target="_blank" class="btn btn-primary rounded-pill px-4 shadow-sm fw-medium d-inline-flex align-items-center gap-2">
+                <i class="bi bi-printer"></i>
+                <span>Cetak Laporan</span>
+            </a>
         </div>
     </div>
 
@@ -65,7 +73,6 @@
                             @endif
                         </td>
                         <td class="px-3 text-center">
-                            <!-- TOMBOL SETUJUI DENGAN URL LANGSUNG -->
                             @if(strtolower($item->status) == 'pending' || strtolower($item->status) == 'menunggu')
                                 <form action="/petugas/peminjaman/{{ $item->id_peminjaman }}/setujui" method="POST" class="d-inline">
                                     @csrf

@@ -210,4 +210,28 @@ class PeminjamanController
 
         return redirect(route('petugas.peminjaman.index'))->with('success', 'Peminjaman alat berhasil disetujui!');
     }
+
+    // Cetak Laporan Khusus Petugas
+    public function cetakLaporanPetugas(Request $request)
+    {
+        $currentUser = User::current();
+
+        // Ambil semua data peminjaman tanpa pagination
+        $datap = Peminjaman::orderBy('id_peminjaman', 'desc')->get();
+
+        // Relasikan data alat dan user untuk setiap baris transaksi
+        foreach ($datap as $item) {
+            $item->data_alat = Alat::where('id_alat', $item->id_alat)->first();
+            $item->data_user = User::where('id', $item->id_user)->first();
+        }
+        // Catat aktivitas cetak laporan ke Log
+        if ($currentUser) {
+            LogAktifitas::create([
+                'id_user'   => $currentUser->id,
+                'aktifitas' => 'Petugas (' . ($currentUser->username ?? 'Petugas') . ') mencetak laporan rekapitulasi peminjaman.'
+            ]);
+        }
+
+        return view('petugas.cetak_laporan', compact('datap', 'currentUser'));
+    }
 }
