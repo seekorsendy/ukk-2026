@@ -72,7 +72,7 @@
                 </svg>
             </button>
             <a href="{{ $logoUrl }}" class="fs-6 fw-bold text-uppercase tracking-wider text-decoration-none text-body text-truncate m-0">
-                {{ config('app.name', 'PINVERA') }}
+                {{ config('app.name', 'SHEIN') }}
             </a>
         </div>
 

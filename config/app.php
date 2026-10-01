@@ -8,7 +8,7 @@ return [
     |--------------------------------------------------------------------------
     */
 
-    'name'     => env('APP_NAME', 'PINVERA'),
+    'name'     => env('APP_NAME', 'SHEIN'),
 
     // Saat true, halaman error menampilkan detail lengkap. Matikan di produksi.
     'debug'    => env('APP_DEBUG', true),
