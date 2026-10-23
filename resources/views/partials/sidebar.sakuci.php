@@ -103,16 +103,12 @@
                     <small class="sidebar-heading text-body-secondary px-2 my-2 d-block">Utama</small>
                 </li>
                 <li>
-                    @php 
-                        $active = $isActive('/admin/dashboard') || 
-                                ($isActive('/admin') && !$isActive('/admin/users') && !$isActive('/admin/roles') && !$isActive('/admin/kategori') && !$isActive('/admin/alat') && !$isActive('/admin/peminjaman') && !$isActive('/admin/pengembalian') && !$isActive('/admin/database') && !$isActive('/admin/log-aktifitas')); 
-                    @endphp
+                    @php $active = $isActive('/admin/dashboard') || $currentUri === '/admin' || $currentUri === '/admin/'; @endphp
                     <a href="{{ route('admin.dashboard') }}" class="sidebar-link {{ $active ? 'active' : '' }}">
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>Dashboard</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <small class="sidebar-heading text-body-secondary px-2 my-2 d-block">Pengguna</small>
                 </li>
@@ -130,7 +126,6 @@
                         <span>Manage Role</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <small class="sidebar-heading text-body-secondary px-2 my-2 d-block">Inventaris</small>
                 </li>
@@ -148,7 +143,6 @@
                         <span>Data Alat</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <small class="sidebar-heading text-body-secondary px-2 my-2 d-block">Transaksi</small>
                 </li>
@@ -166,7 +160,6 @@
                         <span>Pengembalian</span>
                     </a>
                 </li>
-
                 <li class="nav-item">
                     <small class="sidebar-heading text-body-secondary px-2 my-2 d-block">Sistem</small>
                 </li>
@@ -191,10 +184,7 @@
                     <small class="sidebar-heading text-body-secondary px-2 my-2 d-block">Menu Peminjam</small>
                 </li>
                 <li>
-                    @php 
-                        $active = $isActive('/peminjam/dashboard', '/dashboard') || 
-                                ($isActive('/peminjam') && !$isActive('/peminjam/daftar-alat') && !$isActive('/peminjam/alat') && !$isActive('/peminjam/ajukan') && !$isActive('/peminjam/riwayat') && !$isActive('/peminjam/pengembalian')); 
-                    @endphp
+                    @php $active = $currentUri === '/peminjam' || $currentUri === '/peminjam/' || $isActive('/peminjam/dashboard'); @endphp
                     <a href="{{ route('peminjam.dashboard') }}" class="sidebar-link {{ $active ? 'active' : '' }}">
                         <i class="bi bi-grid-1x2-fill"></i>
                         <span>Dashboard</span>
@@ -208,7 +198,7 @@
                     </a>
                 </li>
                 <li>
-                    @php $active = $isActive('/peminjam/peminjam/ajukan', '/peminjam/ajukan') && !$isActive('/pengembalian'); @endphp
+                    @php $active = $isActive('/peminjam/ajukan', '/peminjam/create', '/peminjam/peminjam/ajukan'); @endphp
                     <a href="{{ route('peminjam.createPeminjam') }}" class="sidebar-link {{ $active ? 'active' : '' }}">
                         <i class="bi bi-plus-circle-fill"></i>
                         <span>Ajukan Peminjaman</span>
@@ -222,7 +212,7 @@
                     </a>
                 </li>
                 <li>
-                    @php $active = $isActive('/peminjam/riwayat-peminjaman', '/peminjam/riwayat'); @endphp
+                    @php $active = $isActive('/riwayat-peminjaman'); @endphp
                     <a href="{{ route('peminjam.riwayat') }}" class="sidebar-link {{ $active ? 'active' : '' }}">
                         <i class="bi bi-clock-history"></i>
                         <span>Riwayat Peminjaman</span>
@@ -236,8 +226,9 @@
                 </li>
                 <li>
                     @php 
-                        $active = $isActive('/petugas/dashboard') || 
-                                ($isActive('/petugas') && !$isActive('/petugas/peminjaman')); 
+                        $active = $currentUri === '/petugas' || 
+                                  $currentUri === '/petugas/' || 
+                                  $isActive('/petugas/dashboard'); 
                     @endphp
                     <a href="{{ route('petugas.dashboard') }}" class="sidebar-link {{ $active ? 'active' : '' }}">
                         <i class="bi bi-grid-1x2-fill"></i>
@@ -251,6 +242,13 @@
                         <span>Persetujuan Peminjaman</span>
                     </a>
                 </li>
+                <li>
+                    @php $active = $isActive('/petugas/pengembalian'); @endphp
+                    <a href="{{ route('petugas.pengembalian.index') }}" class="sidebar-link {{ $active ? 'active' : '' }}">
+                        <i class="bi bi-arrow-return-left"></i>
+                        <span>Pantau Pengembalian</span>
+                    </a>
+                </li>
             @endif
 
         </ul>
@@ -258,8 +256,9 @@
 
     <hr class="my-2 border-secondary opacity-15 flex-shrink-0">
 
-    <!-- Bagian Bawah (Profil & Logout) -->
+    <!-- BAGIAN BAWAH SIDEBAR (Profil / Tombol Login & Register) -->
     @if ($currentUser)
+        <!-- Tampil Jika Sudah Login -->
         <div class="d-flex flex-column gap-2 px-1 flex-shrink-0 pt-1">
             <div class="d-flex align-items-center gap-2 p-2 rounded-3 bg-body-tertiary">
                 <div class="bg-primary text-white rounded-circle p-2 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px; flex-shrink: 0;">
@@ -278,6 +277,18 @@
                     <span class="fw-medium">Logout</span>
                 </button>
             </form>
+        </div>
+    @else
+        <!-- Tampil Jika Belum Login (Guest) -->
+        <div class="d-flex flex-column gap-2 px-1 flex-shrink-0 pt-1">
+            <a href="{{ route('login') }}" class="btn btn-sm btn-outline-primary w-100 rounded-3 d-flex align-items-center justify-content-center gap-2 py-2">
+                <i class="bi bi-box-arrow-in-right"></i>
+                <span class="fw-medium">Masuk</span>
+            </a>
+            <a href="{{ route('register') }}" class="btn btn-sm btn-primary w-100 rounded-3 d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm">
+                <i class="bi bi-person-plus"></i>
+                <span class="fw-medium">Daftar Akun</span>
+            </a>
         </div>
     @endif
 

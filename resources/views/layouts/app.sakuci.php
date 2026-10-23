@@ -130,9 +130,10 @@
                 </button>
             </header>
 
-            <main class="container-fluid flex-grow-1 p-4 p-lg-5">
+            <main class="flex-grow-1 p-0 m-0 w-100">
                 @include('partials.flash')
                 @yield('content')
+            </main>
             </main>
 
             @include('partials.footer')

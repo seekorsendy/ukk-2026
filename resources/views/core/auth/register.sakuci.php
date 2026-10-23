@@ -1,113 +1,272 @@
+Berikut adalah pembaruan kode untuk halaman **Registrasi/Pendaftaran** Anda (`register.blade.php`). Nama aplikasi telah diubah menjadi **SHEIN**, dan desainnya sudah disesuaikan menggunakan gaya **Dark Slate Cyan / Neon Tech** agar 100% konsisten dengan halaman login, landing page, dan admin dashboard sebelumnya:
+
+```html
 @extends('layouts.app')
 
-@section('title', 'Daftar Akun - InventarisHub')
+@section('title', 'Daftar Akun - SHEIN')
 
 @section('content')
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-<div class="row justify-content-center align-items-center min-vh-75 py-5">
-    <div class="col-md-6 col-lg-5">
-        
-        <!-- Card Register Modern -->
-        <div class="card border-0 shadow-lg rounded-4 p-2 bg-white">
-            <div class="card-body p-4">
+<style>
+    /* Paksa background body & layout mengikuti Dark Slate Cyan Theme */
+    body, #app, main {
+        background-color: #090d16 !important;
+        color: #f1f5f9 !important;
+    }
+
+    /* Container Wrapper */
+    .register-page-wrapper {
+        background-color: #090d16 !important;
+        color: #f1f5f9 !important;
+        min-height: 100vh;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+        position: relative;
+        overflow-x: hidden;
+    }
+
+    /* Ambient Glowing Backgrounds */
+    .ambient-glow-1 {
+        position: absolute;
+        top: -10%;
+        left: -5%;
+        width: 450px;
+        height: 450px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, rgba(9, 13, 22, 0) 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .ambient-glow-2 {
+        position: absolute;
+        bottom: -10%;
+        right: -5%;
+        width: 500px;
+        height: 500px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(9, 13, 22, 0) 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    /* Modern Dark Glassmorphism Card */
+    .register-glass-card {
+        background: rgba(15, 23, 42, 0.9) !important;
+        border: 1px solid rgba(56, 189, 248, 0.18) !important;
+        border-radius: 1.5rem !important;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5) !important;
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        transition: all 0.3s ease;
+    }
+
+    .register-glass-card:hover {
+        border-color: rgba(56, 189, 248, 0.35) !important;
+        box-shadow: 0 25px 50px rgba(6, 182, 212, 0.15) !important;
+    }
+
+    /* Icon Header */
+    .icon-box-logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 18px;
+        background: #0c2233 !important;
+        color: #38bdf8 !important;
+        border: 1px solid rgba(56, 189, 248, 0.25);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.75rem;
+        box-shadow: 0 8px 20px rgba(6, 182, 212, 0.2);
+    }
+
+    /* Form Controls Dark Theme */
+    .form-dark-label {
+        color: #94a3b8;
+        font-size: 0.78rem;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+
+    .input-group-text-dark {
+        background-color: rgba(30, 41, 59, 0.8) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        color: #38bdf8 !important;
+    }
+
+    .form-control-dark, .form-select-dark {
+        background-color: rgba(30, 41, 59, 0.6) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
+        color: #ffffff !important;
+        transition: all 0.25s ease;
+    }
+
+    .form-control-dark:focus, .form-select-dark:focus {
+        background-color: rgba(30, 41, 59, 0.9) !important;
+        border-color: #06b6d4 !important;
+        box-shadow: 0 0 12px rgba(6, 182, 212, 0.25) !important;
+        color: #ffffff !important;
+    }
+
+    .form-control-dark::placeholder {
+        color: #64748b;
+    }
+
+    .form-select-dark option {
+        background-color: #0f172a;
+        color: #ffffff;
+    }
+
+    /* Tombol Neon Gradient */
+    .btn-neon-primary {
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%) !important;
+        border: none !important;
+        color: #ffffff !important;
+        font-weight: 600;
+        padding: 12px;
+        border-radius: 12px !important;
+        box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-neon-primary:hover {
+        opacity: 0.95;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(6, 182, 212, 0.45);
+    }
+
+    .link-neon-cyan {
+        color: #38bdf8;
+        transition: color 0.2s ease;
+    }
+
+    .link-neon-cyan:hover {
+        color: #06b6d4;
+        text-decoration: underline !important;
+    }
+</style>
+
+<div class="register-page-wrapper">
+    <!-- Ambient Glows Background -->
+    <div class="ambient-glow-1"></div>
+    <div class="ambient-glow-2"></div>
+
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-md-6 col-lg-5">
                 
-                <!-- Header / Logo Kecil -->
-                <div class="text-center mb-4">
-                    <div class="bg-primary-subtle text-primary rounded-circle d-inline-flex p-3 fs-3 mb-3 shadow-sm">
-                        <i class="bi bi-person-plus-fill"></i>
+                <!-- Card Register SHEIN -->
+                <div class="card register-glass-card p-2">
+                    <div class="card-body p-4 p-sm-4">
+                        
+                        <!-- Header / Logo -->
+                        <div class="text-center mb-4">
+                            <div class="icon-box-logo mb-3">
+                                <i class="bi bi-person-plus-fill"></i>
+                            </div>
+                            <h2 class="fw-bold text-white fs-4 mb-1">Buat Akun Baru</h2>
+                            <p class="small mb-0" style="color: #94a3b8;">
+                                Sudah punya akun? <a href="{{ route('login') }}" class="link-neon-cyan fw-semibold text-decoration-none ms-1">Masuk di sini</a>
+                            </p>
+                        </div>
+
+                        <!-- Form Register -->
+                        <form method="POST" action="{{ route('register.attempt') }}">
+                            @csrf
+
+                            <!-- Input Username -->
+                            <div class="mb-3">
+                                <label class="form-label form-dark-label text-uppercase mb-1" for="username">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dark rounded-start-3">
+                                        <i class="bi bi-person"></i>
+                                    </span>
+                                    <input type="text" id="username" name="username" value="{{ old('username') }}" 
+                                           class="form-control form-control-dark rounded-end-3 shadow-none @error('username') is-invalid @enderror" 
+                                           placeholder="Pilih username unik" autofocus>
+                                </div>
+                                @error('username') 
+                                    <div class="invalid-feedback d-block small mt-1" style="color: #f87171;">{{ $message }}</div> 
+                                @enderror
+                            </div>
+
+                            <!-- Input Password -->
+                            <div class="mb-3">
+                                <label class="form-label form-dark-label text-uppercase mb-1" for="password">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dark rounded-start-3">
+                                        <i class="bi bi-lock"></i>
+                                    </span>
+                                    <input type="password" id="password" name="password" 
+                                           class="form-control form-control-dark rounded-end-3 shadow-none @error('password') is-invalid @enderror" 
+                                           placeholder="Minimal 6 karakter">
+                                </div>
+                                @error('password') 
+                                    <div class="invalid-feedback d-block small mt-1" style="color: #f87171;">{{ $message }}</div> 
+                                @enderror
+                            </div>
+
+                            <!-- Input Konfirmasi Password -->
+                            <div class="mb-3">
+                                <label class="form-label form-dark-label text-uppercase mb-1" for="password_confirmation">Konfirmasi Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dark rounded-start-3">
+                                        <i class="bi bi-lock-fill"></i>
+                                    </span>
+                                    <input type="password" id="password_confirmation" name="password_confirmation" 
+                                           class="form-control form-control-dark rounded-end-3 shadow-none" 
+                                           placeholder="Ulangi password">
+                                </div>
+                            </div>
+
+                            <!-- Pilihan Role / Daftar Sebagai -->
+                            @if (count($roles) > 1)
+                                <div class="mb-4">
+                                    <label class="form-label form-dark-label text-uppercase mb-1" for="role">Daftar Sebagai</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text input-group-text-dark rounded-start-3">
+                                            <i class="bi bi-shield-check"></i>
+                                        </span>
+                                        <select id="role" name="role" class="form-select form-select-dark rounded-end-3 shadow-none @error('role') is-invalid @enderror">
+                                            @foreach ($roles as $role)
+                                                <option value="{{ $role->name }}" {{ old('role') === $role->name ? 'selected' : '' }}>
+                                                    {{ $role->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    @error('role') 
+                                        <div class="invalid-feedback d-block small mt-1" style="color: #f87171;">{{ $message }}</div> 
+                                    @enderror
+                                </div>
+                            @else
+                                <input type="hidden" name="role" value="{{ $roles[0]->name }}">
+                            @endif
+
+                            <!-- Tombol Submit -->
+                            <button class="btn btn-neon-primary w-100 mb-3 d-flex align-items-center justify-content-center gap-2" type="submit">
+                                <i class="bi bi-check-circle fs-5"></i>
+                                <span>Daftar Sekarang</span>
+                            </button>
+                        </form>
+
                     </div>
-                    <h2 class="fw-bold text-dark fs-4 mb-1">Buat Akun Baru</h2>
-                    <p class="text-muted small">Sudah punya akun? <a href="{{ route('login') }}" class="text-primary fw-semibold text-decoration-none">Masuk di sini</a></p>
                 </div>
 
-                <!-- Form Register -->
-                <form method="POST" action="{{ route('register.attempt') }}">
-                    @csrf
-
-                    <!-- Input Username -->
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary small" for="username">USERNAME</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted">
-                                <i class="bi bi-person"></i>
-                            </span>
-                            <input type="text" id="username" name="username" value="{{ old('username') }}" 
-                                   class="form-control bg-light border-start-0 shadow-none @error('username') is-invalid @enderror" 
-                                   placeholder="Pilih username unik" autofocus>
-                        </div>
-                        @error('username') 
-                            <div class="invalid-feedback d-block">{{ $message }}</div> 
-                        @enderror
-                    </div>
-
-                    <!-- Input Password -->
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary small" for="password">PASSWORD</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted">
-                                <i class="bi bi-lock"></i>
-                            </span>
-                            <input type="password" id="password" name="password" 
-                                   class="form-control bg-light border-start-0 shadow-none @error('password') is-invalid @enderror" 
-                                   placeholder="Minimal 6 karakter">
-                        </div>
-                        @error('password') 
-                            <div class="invalid-feedback d-block">{{ $message }}</div> 
-                        @enderror
-                    </div>
-
-                    <!-- Input Konfirmasi Password -->
-                    <div class="mb-3">
-                        <label class="form-label fw-semibold text-secondary small" for="password_confirmation">KONFIRMASI PASSWORD</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted">
-                                <i class="bi bi-lock-fill"></i>
-                            </span>
-                            <input type="password" id="password_confirmation" name="password_confirmation" 
-                                   class="form-control bg-light border-start-0 shadow-none" 
-                                   placeholder="Ulangi password">
-                        </div>
-                    </div>
-
-                    <!-- Pilihan Role / Daftar Sebagai -->
-                    @if (count($roles) > 1)
-                        <div class="mb-4">
-                            <label class="form-label fw-semibold text-secondary small" for="role">DAFTAR SEBAGAI</label>
-                            <div class="input-group">
-                                <span class="input-group-text bg-light border-end-0 rounded-start-3 text-muted">
-                                    <i class="bi bi-shield-check"></i>
-                                </span>
-                                <select id="role" name="role" class="form-select bg-light border-start-0 shadow-none @error('role') is-invalid @enderror">
-                                    @foreach ($roles as $role)
-                                        <option value="{{ $role->name }}" {{ old('role') === $role->name ? 'selected' : '' }}>
-                                            {{ $role->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('role') 
-                                <div class="invalid-feedback d-block">{{ $message }}</div> 
-                            @enderror
-                        </div>
-                    @else
-                        <input type="hidden" name="role" value="{{ $roles[0]->name }}">
-                    @endif
-
-                    <!-- Tombol Submit -->
-                    <button class="btn btn-primary w-100 py-2 rounded-3 fw-semibold shadow-sm mb-3" type="submit">
-                        <i class="bi bi-check-circle me-2"></i> Daftar Sekarang
-                    </button>
-                </form>
+                <!-- Footer Kecil -->
+                <div class="text-center mt-4 small" style="color: #64748b;">
+                    &copy; {{ date('Y') }} <strong>SHEIN</strong> &bull; Sistem Peminjaman Lab Sekolah
+                </div>
 
             </div>
         </div>
-
-        <!-- Footer Kecil -->
-        <div class="text-center mt-4 text-muted small">
-            &copy; {{ date('Y') }} InventarisHub. All rights reserved.
-        </div>
-
     </div>
 </div>
 @endsection
+
+```

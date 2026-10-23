@@ -1,82 +1,293 @@
 @extends('layouts.app')
 
-@section('title', config('app.name') . ' -- Edit Pengembalian')
+@section('title', config('app.name', 'SHEIN') . ' -- Edit Pengembalian')
 
 @section('content')
-<div class="container-fluid py-4 px-4">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<style>
+    /* Dynamic Theme Variables (Light & Dark Mode) */
+    :root {
+        --theme-cyan: #0891b2;
+        --theme-cyan-bright: #06b6d4;
+        --theme-cyan-subtle: rgba(6, 182, 212, 0.12);
+        --theme-bg-body: #f8fafc;
+        --theme-card-bg: #ffffff;
+        --theme-card-border: rgba(0, 0, 0, 0.08);
+        --theme-text-main: #0f172a;
+        --theme-text-muted: #64748b;
+        --theme-input-bg: #f8fafc;
+        --theme-input-border: #cbd5e1;
+        --theme-input-text: #0f172a;
+        --theme-btn-sec-bg: #f1f5f9;
+        --theme-btn-sec-border: #cbd5e1;
+        --theme-btn-sec-text: #334155;
+    }
+
+    /* Override Variabel saat Dark Mode Aktif */
+    [data-bs-theme="dark"], .dark {
+        --theme-cyan: #38bdf8;
+        --theme-cyan-bright: #06b6d4;
+        --theme-cyan-subtle: rgba(6, 182, 212, 0.18);
+        --theme-bg-body: #090d16;
+        --theme-card-bg: rgba(15, 23, 42, 0.95);
+        --theme-card-border: rgba(56, 189, 248, 0.18);
+        --theme-text-main: #ffffff;
+        --theme-text-muted: #94a3b8;
+        --theme-input-bg: rgba(30, 41, 59, 0.6);
+        --theme-input-border: rgba(56, 189, 248, 0.2);
+        --theme-input-text: #ffffff;
+        --theme-btn-sec-bg: rgba(255, 255, 255, 0.05);
+        --theme-btn-sec-border: rgba(255, 255, 255, 0.15);
+        --theme-btn-sec-text: #e2e8f0;
+    }
+
+    body, #app, main {
+        background-color: var(--theme-bg-body) !important;
+        color: var(--theme-text-main) !important;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .admin-dashboard-fullwrapper {
+        background-color: var(--theme-bg-body) !important;
+        color: var(--theme-text-main) !important;
+        min-height: 100vh;
+        width: 100%;
+        padding: 2rem 3rem;
+        box-sizing: border-box;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Dynamic Glassmorphism Card */
+    .lab-form-card {
+        background: var(--theme-card-bg) !important;
+        border: 1px solid var(--theme-card-border) !important;
+        border-radius: 1.25rem !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    /* Form Labels & Inputs Dynamic */
+    .form-dark-label {
+        color: var(--theme-text-muted);
+        font-size: 0.78rem;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+    }
+
+    .input-group-text-dynamic {
+        background-color: var(--theme-input-bg) !important;
+        border: 1px solid var(--theme-input-border) !important;
+        color: var(--theme-cyan) !important;
+    }
+
+    .form-control-dynamic, .form-select-dynamic {
+        background-color: var(--theme-input-bg) !important;
+        border: 1px solid var(--theme-input-border) !important;
+        color: var(--theme-input-text) !important;
+        transition: all 0.25s ease;
+    }
+
+    .form-control-dynamic:focus, .form-select-dynamic:focus {
+        background-color: var(--theme-input-bg) !important;
+        border-color: var(--theme-cyan-bright) !important;
+        box-shadow: 0 0 12px var(--theme-cyan-subtle) !important;
+        color: var(--theme-input-text) !important;
+    }
+
+    .form-select-dynamic option {
+        background-color: var(--theme-card-bg);
+        color: var(--theme-input-text);
+    }
+
+    /* Tombol-tombol */
+    .btn-neon-primary {
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%) !important;
+        border: none !important;
+        color: #ffffff !important;
+        font-weight: 600;
+        box-shadow: 0 6px 20px rgba(6, 182, 212, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .btn-neon-primary:hover {
+        opacity: 0.95;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(6, 182, 212, 0.45);
+    }
+
+    .btn-dark-secondary {
+        background: var(--theme-btn-sec-bg);
+        border: 1px solid var(--theme-btn-sec-border);
+        color: var(--theme-btn-sec-text);
+        transition: all 0.2s ease;
+    }
+
+    .btn-dark-secondary:hover {
+        background: var(--theme-cyan-subtle);
+        color: var(--theme-cyan);
+        border-color: var(--theme-cyan);
+    }
+
+    .link-neon-cyan {
+        color: var(--theme-cyan);
+        transition: color 0.2s ease;
+    }
+
+    .link-neon-cyan:hover {
+        color: var(--theme-cyan-bright);
+    }
+</style>
+
+<div class="admin-dashboard-fullwrapper">
     
-    <!-- Header Halaman & Tombol Kembali -->
+    <!-- Top Header Banner -->
     <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-4 gap-3">
         <div>
-            <h3 class="fw-bold mb-1 tracking-tight">Edit Data Pengembalian</h3>
-            <p class="text-body-secondary small mb-0">Perbarui informasi pengembalian alat dan denda.</p>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-1 small">
+                    <li class="breadcrumb-item"><a href="{{ route('pengembalian.index') }}" class="text-decoration-none link-neon-cyan">Data Pengembalian</a></li>
+                    <li class="breadcrumb-item active fw-semibold" aria-current="page" style="color: var(--theme-text-main);">Edit Pengembalian</li>
+                </ol>
+            </nav>
+            <h2 class="fw-bold mb-0" style="color: var(--theme-text-main);">Edit Data Pengembalian</h2>
+            <p class="small mb-0" style="color: var(--theme-text-muted);">Perbarui informasi pengembalian alat dan denda lab SHEIN.</p>
         </div>
-        <a href="{{ route('pengembalian.index') }}" class="btn btn-outline-secondary btn-sm px-3 py-2 rounded-3 d-inline-flex align-items-center gap-2">
-            <i class="bi bi-arrow-left"></i>
-            <span class="fw-medium">Kembali</span>
+        <a href="{{ route('pengembalian.index') }}" class="btn btn-dark-secondary px-4 py-2.5 rounded-3 shadow-sm d-inline-flex align-items-center gap-2 fw-semibold">
+            <i class="bi bi-arrow-left fs-5"></i> Kembali
         </a>
     </div>
 
-    <!-- Card Form Edit -->
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-4">
-            <form action="{{ route('pengembalian.update', [$datap->id_pengembalian]) }}" method="POST">
-                @csrf
-
-                <div class="row g-3">
-                    <!-- Peminjaman Locked / Readonly -->
-                    <div class="col-md-6">
-                        <label class="form-label fw-semibold fs-7 text-body-secondary">Data Peminjaman</label>
-                        <!-- Hidden input agar id_peminjaman tetap terkirim saat form disimpan -->
-                        <input type="hidden" name="id_peminjaman" value="{{ $datap->id_peminjaman }}">
-                        <!-- Display Input Readonly -->
-                        <input type="text" class="form-control rounded-3 bg-dark-subtle text-body border-secondary-subtle opacity-75" value="ID #{{ $datap->id_peminjaman }} - {{ $peminjamName }} ({{ $alatName }})" readonly disabled>
+    <!-- Main Card Container -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card lab-form-card border-0 overflow-hidden">
+                
+                <!-- Card Header -->
+                <div class="card-header py-3 px-4 border-bottom d-flex align-items-center gap-3" style="border-color: var(--theme-card-border) !important; background: var(--theme-cyan-subtle);">
+                    <div class="rounded-3 p-2" style="background: var(--theme-cyan-subtle); color: var(--theme-cyan); border: 1px solid var(--theme-card-border);">
+                        <i class="bi bi-pencil-square fs-5"></i>
                     </div>
-
-                    <!-- Tanggal Pengembalian -->
-                    <div class="col-md-6">
-                        <label for="tanggal_pengembalian" class="form-label fw-semibold fs-7">Tanggal Pengembalian</label>
-                        <input type="datetime-local" name="tanggal_pengembalian" id="tanggal_pengembalian" class="form-control rounded-3" value="{{ old('tanggal_pengembalian', date('Y-m-d\TH:i', strtotime($datap->tanggal_pengembalian))) }}" required>
-                    </div>
-
-                    <!-- Terlambat (Hari) -->
-                    <div class="col-md-4">
-                        <label for="terlambat_hari" class="form-label fw-semibold fs-7">Terlambat (Hari)</label>
-                        <input type="number" min="0" name="terlambat_hari" id="terlambat_hari" class="form-control rounded-3" value="{{ old('terlambat_hari', $datap->terlambat_hari ?? 0) }}">
-                    </div>
-
-                    <!-- Denda -->
-                    <div class="col-md-4">
-                        <label for="denda" class="form-label fw-semibold fs-7">Denda (Rp)</label>
-                        <input type="number" min="0" name="denda" id="denda" class="form-control rounded-3" value="{{ old('denda', $datap->denda ?? 0) }}">
-                    </div>
-
-                    <!-- Kondisi Barang -->
-                    <div class="col-md-4">
-                        <label for="kondisi_barang" class="form-label fw-semibold fs-7">Kondisi Barang</label>
-                        <select name="kondisi_barang" id="kondisi_barang" class="form-select rounded-3">
-                            <option value="Baik" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Baik' ? 'selected' : '' }}>Baik</option>
-                            <option value="Rusak Ringan" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
-                            <option value="Rusak Berat" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
-                            <option value="Hilang" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Hilang' ? 'selected' : '' }}>Hilang</option>
-                        </select>
-                    </div>
-
-                    <!-- Catatan -->
-                    <div class="col-12">
-                        <label for="catatan" class="form-label fw-semibold fs-7">Catatan</label>
-                        <textarea name="catatan" id="catatan" rows="3" class="form-control rounded-3" placeholder="Tambahkan catatan jika ada...">{{ old('catatan', $datap->catatan) }}</textarea>
-                    </div>
-
-                    <!-- Tombol Simpan -->
-                    <div class="col-12 d-flex justify-content-end gap-2 mt-4">
-                        <a href="{{ route('pengembalian.index') }}" class="btn btn-light px-4 py-2 rounded-3 fw-medium">Batal</a>
-                        <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 shadow-sm fw-medium">Simpan Perubahan</button>
+                    <div>
+                        <h6 class="fw-bold mb-0" style="color: var(--theme-text-main);">Formulir Perubahan Data Pengembalian</h6>
+                        <span class="small" style="color: var(--theme-text-muted);">Perbarui catatan transaksi pengembalian perangkat laboratorium</span>
                     </div>
                 </div>
-            </form>
+
+                <!-- Form Body -->
+                <div class="card-body p-4">
+                    <form action="{{ route('pengembalian.update', [$datap->id_pengembalian]) }}" method="POST">
+                        @csrf
+                        @method('get')
+
+                        <div class="row g-3">
+                            <!-- Peminjaman Locked / Readonly -->
+                            <div class="col-md-6">
+                                <label class="form-label form-dark-label text-uppercase">Data Peminjaman</label>
+                                <input type="hidden" name="id_peminjaman" value="{{ $datap->id_peminjaman }}">
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dynamic border-end-0 rounded-start-3"><i class="bi bi-journal-check"></i></span>
+                                    <input type="text" class="form-control form-control-dynamic border-start-0 ps-0 rounded-end-3 shadow-none opacity-75" value="ID #{{ $datap->id_peminjaman }} - {{ $peminjamName }} ({{ $alatName }})" readonly disabled>
+                                </div>
+                            </div>
+
+                            <!-- Tanggal Pengembalian -->
+                            <div class="col-md-6">
+                                <label for="tanggal_pengembalian" class="form-label form-dark-label text-uppercase">Tanggal Pengembalian</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dynamic border-end-0 rounded-start-3"><i class="bi bi-calendar-event"></i></span>
+                                    <input type="datetime-local" name="tanggal_pengembalian" id="tanggal_pengembalian" class="form-control form-control-dynamic border-start-0 ps-0 rounded-end-3 shadow-none" value="{{ old('tanggal_pengembalian', date('Y-m-d\TH:i', strtotime($datap->tanggal_pengembalian))) }}" required>
+                                </div>
+                            </div>
+
+                            <!-- Terlambat (Hari) -->
+                            <div class="col-md-4">
+                                <label for="terlambat_hari" class="form-label form-dark-label text-uppercase">Terlambat (Hari)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dynamic border-end-0 rounded-start-3"><i class="bi bi-clock-history"></i></span>
+                                    <input type="number" min="0" name="terlambat_hari" id="terlambat_hari" class="form-control form-control-dynamic border-start-0 ps-0 rounded-end-3 shadow-none" value="{{ old('terlambat_hari', $datap->terlambat_hari ?? 0) }}">
+                                </div>
+                            </div>
+
+                            <!-- Denda -->
+                            <div class="col-md-4">
+                                <label for="denda" class="form-label form-dark-label text-uppercase">Denda (Rp)</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dynamic border-end-0 rounded-start-3"><i class="bi bi-cash-stack"></i></span>
+                                    <input type="number" min="0" name="denda" id="denda" class="form-control form-control-dynamic border-start-0 ps-0 rounded-end-3 shadow-none" value="{{ old('denda', $datap->denda ?? 0) }}">
+                                </div>
+                            </div>
+
+                            <!-- Kondisi Barang -->
+                            <div class="col-md-4">
+                                <label for="kondisi_barang" class="form-label form-dark-label text-uppercase">Kondisi Barang</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dynamic border-end-0 rounded-start-3"><i class="bi bi-shield-check"></i></span>
+                                    <select name="kondisi_barang" id="kondisi_barang" class="form-select form-select-dynamic border-start-0 ps-0 rounded-end-3 shadow-none">
+                                        <option value="Baik" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Baik' ? 'selected' : '' }}>Baik</option>
+                                        <option value="Rusak Ringan" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
+                                        <option value="Rusak Berat" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
+                                        <option value="Hilang" {{ old('kondisi_barang', $datap->kondisi_barang) == 'Hilang' ? 'selected' : '' }}>Hilang</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Catatan -->
+                            <div class="col-12">
+                                <label for="catatan" class="form-label form-dark-label text-uppercase">Catatan</label>
+                                <div class="input-group">
+                                    <span class="input-group-text input-group-text-dynamic border-end-0 rounded-start-3 align-items-start pt-2.5"><i class="bi bi-card-text"></i></span>
+                                    <textarea name="catatan" id="catatan" rows="3" class="form-control form-control-dynamic border-start-0 ps-0 rounded-end-3 shadow-none" placeholder="Tambahkan catatan jika ada...">{{ old('catatan', $datap->catatan) }}</textarea>
+                                </div>
+                            </div>
+
+                            <!-- Tombol Aksi -->
+                            <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top" style="border-color: var(--theme-card-border) !important;">
+                                <a href="{{ route('pengembalian.index') }}" class="btn btn-dark-secondary px-4 py-2.5 rounded-3 fw-semibold">Batal</a>
+                                <button type="submit" class="btn btn-neon-primary px-4 py-2.5 rounded-3 d-inline-flex align-items-center gap-2">
+                                    <i class="bi bi-save-fill"></i> Simpan Perubahan
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
         </div>
     </div>
 
 </div>
+
+<!-- Script untuk Kalkulasi Denda Otomatis -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const inputTerlambat = document.getElementById('terlambat_hari');
+        const selectKondisi = document.getElementById('kondisi_barang');
+        const inputDenda = document.getElementById('denda');
+        
+        const tarifDendaPerHari = 5000; 
+        const dendaKerusakan = {
+            'Baik': 0,
+            'Rusak Ringan': 25000,
+            'Rusak Berat': 100000,
+            'Hilang': 250000
+        };
+
+        function hitungTotalDenda() {
+            let hari = parseInt(inputTerlambat.value) || 0;
+            if (hari < 0) hari = 0;
+
+            let kondisi = selectKondisi.value;
+            let tambahanDendaRusak = dendaKerusakan[kondisi] || 0;
+
+            let totalDenda = (hari * tarifDendaPerHari) + tambahanDendaRusak;
+            inputDenda.value = totalDenda;
+        }
+
+        if (inputTerlambat && selectKondisi && inputDenda) {
+            inputTerlambat.addEventListener('input', hitungTotalDenda);
+            selectKondisi.addEventListener('change', hitungTotalDenda);
+        }
+    });
+</script>
 @endsection

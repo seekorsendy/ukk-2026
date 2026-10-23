@@ -17,8 +17,10 @@ class AlatController extends Controller
         // Fitur Cari Alat berdasarkan nama atau kode
         if ($request->has('q') && !empty($request->q)) {
             $search = $request->q;
-            $query->where('nama_alat', 'LIKE', "%{$search}%")
+            $query->where(function($q) use ($search) {
+                $q->where('nama_alat', 'LIKE', "%{$search}%")
                   ->orWhere('kode_alat', 'LIKE', "%{$search}%");
+            });
         }
 
         $alats = $query->orderBy('id_alat', 'desc')->paginate(8);
@@ -34,13 +36,25 @@ class AlatController extends Controller
         return view('peminjam.daftar_alat', compact('alats', 'kategoriMap'));
     }
 
+    // Method Index Admin (Fitur pencarian diikutsertakan)
     public function index(Request $request)
     {
-        $datal = Alat::orderBy('id_alat', 'desc')->paginate(4);
-        $kategori = Kategori::all();
-        return view('alat.index', compact('datal', 'kategori'));
-    }
+        $search = $request->input('search');
 
+        if (!empty($search)) {
+            // Pencarian langsung ke kolom nama_alat atau kode_alat
+            $datal = Alat::where('nama_alat', 'LIKE', "%{$search}%")
+                         ->orWhere('kode_alat', 'LIKE', "%{$search}%")
+                         ->orderBy('id_alat', 'desc')
+                         ->paginate(10);
+        } else {
+            $datal = Alat::orderBy('id_alat', 'desc')->paginate(10);
+        }
+
+        $kategori = Kategori::all();
+
+        return view('alat.index', compact('datal', 'kategori', 'search'));
+    }
     public function create(Request $request)
     {
         $kategori = Kategori::all();

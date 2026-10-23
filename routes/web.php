@@ -28,6 +28,9 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.at
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
+// ==========================================
+// ROLE: ADMIN
+// ==========================================
 Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::get('/', [DashboardController::class, 'admin'])->name('admin.dashboard');
 
@@ -40,6 +43,7 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/users', [UserController::class, 'store'])->name('admin.users.store');
 
     Route::get('/database/export', [DatabaseController::class, 'export'])->name('admin.database.export');
+    
     Route::get('/kategori', [KategoriController::class, 'index'])->name('kategori.index');
     Route::get('/kategori/create', [KategoriController::class, 'create'])->name('kategori.create');
     Route::post('/kategori/store', [KategoriController::class, 'store'])->name('kategori.store');
@@ -47,12 +51,13 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::put('/kategori/{id_kategori}', [KategoriController::class, 'update'])->name('kategori.update');
     Route::delete('/kategori/{id_kategori}', [KategoriController::class, 'delete'])->name('kategori.delete');
 
+    // ROUTE ALAT (Penting: Delete berada di atas Update agar URL tidak tertukar)
     Route::get('/alat', [AlatController::class, 'index'])->name('alat.index');
     Route::get('/alat/create', [AlatController::class, 'create'])->name('alat.create');
     Route::post('/alat/store', [AlatController::class, 'store'])->name('alat.store');
     Route::get('/alat/{id_alat}/edit', [AlatController::class, 'edit'])->name('alat.edit');
-    Route::put('/alat/{id_alat}', [AlatController::class, 'update'])->name('alat.update');
-    Route::delete('/alat/{id_alat}', [AlatController::class, 'delete'])->name('alat.delete');
+    Route::post('/alat/{id_alat}/delete', [AlatController::class, 'delete'])->name('alat.delete');
+    Route::post('/alat/{id_alat}', [AlatController::class, 'update'])->name('alat.update');
 
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman.index');
     Route::get('/peminjaman/create', [PeminjamanController::class, 'create'])->name('peminjaman.create');
@@ -68,46 +73,30 @@ Route::group(['prefix' => 'admin', 'middleware' => 'admin'], function () {
     Route::post('/pengembalian/{id}/update', [PengembalianController::class, 'update'])->name('pengembalian.update');
     Route::post('/pengembalian/{id}/delete', [PengembalianController::class, 'delete'])->name('pengembalian.delete');
 
-    // ROUTE BARU: Log Aktifitas Admin
     Route::get('/log-aktifitas', [LogAktifitasController::class, 'index'])->name('admin.log.index');
 });
 
-// @generated-roles:start
-
-// @role:peminjam:start
+// ==========================================
+// ROLE: PEMINJAM (SISWA)
+// ==========================================
 Route::group(['prefix' => 'peminjam', 'middleware' => 'peminjam'], function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('peminjam.dashboard');
-    
-    // Route khusus melihat katalog/daftar alat
+    Route::get('/', [DashboardController::class, 'peminjam'])->name('peminjam.dashboard');
     Route::get('/daftar-alat', [AlatController::class, 'daftarAlatPeminjam'])->name('peminjam.alat');
-
-    // Rute khusus pengguna/peminjam mengajukan peminjaman alat
     Route::get('/peminjam', [PeminjamanController::class, 'indexPeminjam'])->name('peminjam.indexPeminjam');
     Route::get('/peminjam/ajukan', [PeminjamanController::class, 'createPeminjam'])->name('peminjam.createPeminjam');
     Route::post('/peminjam/ajukan', [PeminjamanController::class, 'storePeminjam'])->name('peminjam.storePeminjam');
     Route::get('/riwayat-peminjaman', [PeminjamanController::class, 'indexPeminjam'])->name('peminjam.riwayat');
-
-    // ROUTE BARU: Pengembalian Alat oleh Peminjam
     Route::get('/pengembalian/ajukan', [PengembalianController::class, 'createPeminjam'])->name('peminjam.pengembalian.create');
     Route::post('/pengembalian/store', [PengembalianController::class, 'storePeminjam'])->name('peminjam.pengembalian.store');
 });
-// @role:peminjam:end
 
-// @role:petugas:start
+// ==========================================
+// ROLE: PETUGAS
+// ==========================================
 Route::group(['prefix' => 'petugas', 'middleware' => 'petugas'], function () {
-    Route::get('/', [DashboardController::class, 'index'])->name('petugas.dashboard');
-    
-    // Rute Petugas untuk Peminjaman & Persetujuan
+    Route::get('/', [DashboardController::class, 'petugas'])->name('petugas.dashboard');
     Route::get('/peminjaman', [PeminjamanController::class, 'indexPetugas'])->name('petugas.peminjaman.index');
     Route::post('/peminjaman/{id}/setujui', [PeminjamanController::class, 'setujuiPetugas'])->name('petugas.peminjaman.setujui');
+    Route::get('/pengembalian', [PengembalianController::class, 'indexPetugas'])->name('petugas.pengembalian.index');
+    Route::get('/pengembalian/cetak', [PengembalianController::class, 'cetakPetugas'])->name('petugas.pengembalian.cetak');
 });
-// @role:petugas:end
-
-// @generated-roles:end
-// Route Cetak Laporan
-Route::get('/peminjaman/cetak-laporan', [PeminjamanController::class, 'cetakLaporan'])->name('peminjaman.cetak');
-
-// Route CRUD Peminjaman
-Route::resource('peminjaman', PeminjamanController::class);
-// ROUTE CETAK LAPORAN PETUGAS (Letakkan DI ATAS route ber-parameter {id})
-Route::get('/petugas/peminjaman/cetak', [PeminjamanController::class, 'cetakLaporanPetugas'])->name('petugas.peminjaman.cetak');

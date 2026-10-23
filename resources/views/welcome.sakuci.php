@@ -4,30 +4,54 @@
 
 @section('content')
 <style>
-    /* Reset Overlay & Background Slate Dark */
-    .welcome-fullscreen-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        min-height: 100vh;
-        background: #090d16;
-        color: #f1f5f9;
-        z-index: 9999;
-        overflow-x: hidden;
+    /* Dynamic Theme Variables (Light & Dark Mode) */
+    :root {
+        --lab-cyan: #0891b2;
+        --lab-cyan-bright: #06b6d4;
+        --lab-cyan-subtle: rgba(6, 182, 212, 0.12);
+        --lab-bg-body: #f8fafc;
+        --lab-card-bg: #ffffff;
+        --lab-card-border: rgba(0, 0, 0, 0.08);
+        --lab-text-main: #0f172a;
+        --lab-text-muted: #64748b;
+        --lab-gradient: linear-gradient(135deg, #0891b2 0%, #2563eb 50%, #7c3aed 100%);
+        --lab-glow-cyan: rgba(6, 182, 212, 0.18);
+        --lab-pill-bg: rgba(0, 0, 0, 0.05);
+        --lab-pill-border: rgba(0, 0, 0, 0.1);
     }
 
-    /* Skema Warna Neon Tech/Vocational (Dark Mode) */
-    :root {
-        --lab-cyan: #06b6d4;
-        --lab-blue: #3b82f6;
-        --lab-violet: #8b5cf6;
-        --lab-emerald: #10b981;
-        --lab-amber: #f59e0b;
+    /* Override Variabel saat Dark Mode Aktif */
+    [data-bs-theme="dark"], .dark {
+        --lab-cyan: #38bdf8;
+        --lab-cyan-bright: #06b6d4;
+        --lab-cyan-subtle: rgba(6, 182, 212, 0.18);
+        --lab-bg-body: #090d16;
+        --lab-card-bg: rgba(15, 23, 42, 0.85);
+        --lab-card-border: rgba(56, 189, 248, 0.18);
+        --lab-text-main: #ffffff;
+        --lab-text-muted: #94a3b8;
         --lab-gradient: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
-        --lab-card-bg: rgba(15, 23, 42, 0.75);
-        --lab-card-border: rgba(56, 189, 248, 0.15);
         --lab-glow-cyan: rgba(6, 182, 212, 0.25);
+        --lab-pill-bg: rgba(255, 255, 255, 0.06);
+        --lab-pill-border: rgba(255, 255, 255, 0.1);
+    }
+
+    body, #app, main {
+        background-color: var(--lab-bg-body) !important;
+        color: var(--lab-text-main) !important;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .admin-dashboard-fullwrapper {
+        background-color: var(--lab-bg-body) !important;
+        min-height: 100vh;
+        width: 100%;
+        padding: 2rem 3rem;
+        box-sizing: border-box;
+        color: var(--lab-text-main) !important;
+        position: relative;
+        overflow-x: hidden;
+        transition: background-color 0.3s ease;
     }
 
     /* Text Gradient Highlight */
@@ -40,48 +64,48 @@
     /* Ambient Glowing Elements */
     .ambient-glow-1 {
         position: absolute;
-        top: -10%;
-        left: -5%;
-        width: 500px;
-        height: 500px;
+        top: 20px;
+        left: 20px;
+        width: 400px;
+        height: 400px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(6, 182, 212, 0.18) 0%, rgba(9, 13, 22, 0) 70%);
+        background: radial-gradient(circle, rgba(6, 182, 212, 0.12) 0%, rgba(9, 13, 22, 0) 70%);
         pointer-events: none;
         z-index: 0;
     }
 
     .ambient-glow-2 {
         position: absolute;
-        bottom: 10%;
-        right: -5%;
-        width: 600px;
-        height: 600px;
+        bottom: 20px;
+        right: 20px;
+        width: 500px;
+        height: 500px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba(139, 92, 246, 0.15) 0%, rgba(9, 13, 22, 0) 70%);
+        background: radial-gradient(circle, rgba(139, 92, 246, 0.1) 0%, rgba(9, 13, 22, 0) 70%);
         pointer-events: none;
         z-index: 0;
     }
 
     /* Glassmorphism Cards */
     .lab-glass-card {
-        background: var(--lab-card-bg);
+        background: var(--lab-card-bg) !important;
         backdrop-filter: blur(16px);
         -webkit-backdrop-filter: blur(16px);
-        border: 1px solid var(--lab-card-border);
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+        border: 1px solid var(--lab-card-border) !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
         transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .lab-glass-card:hover {
         transform: translateY(-5px);
-        border-color: rgba(6, 182, 212, 0.4);
+        border-color: var(--lab-cyan) !important;
         box-shadow: 0 16px 40px var(--lab-glow-cyan);
     }
 
     /* Desain Indicator Cards */
     .indicator-card-modern {
-        background: linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(20, 30, 55, 0.6) 100%);
-        border: 1px solid rgba(56, 189, 248, 0.18);
+        background: var(--lab-card-bg) !important;
+        border: 1px solid var(--lab-card-border) !important;
         border-radius: 16px;
         padding: 16px;
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -103,8 +127,8 @@
 
     .indicator-card-modern:hover {
         transform: translateY(-4px);
-        border-color: rgba(6, 182, 212, 0.4);
-        box-shadow: 0 12px 28px rgba(6, 182, 212, 0.15);
+        border-color: var(--lab-cyan) !important;
+        box-shadow: 0 12px 28px var(--lab-glow-cyan);
     }
 
     .indicator-card-modern:hover::before {
@@ -115,7 +139,7 @@
     .btn-cta-primary {
         background: var(--lab-gradient);
         border: none;
-        color: #ffffff;
+        color: #ffffff !important;
         font-weight: 600;
         padding: 14px 32px;
         border-radius: 50px;
@@ -128,23 +152,14 @@
 
     .btn-cta-primary:hover {
         opacity: 0.95;
-        color: #ffffff;
         transform: translateY(-2px);
         box-shadow: 0 12px 32px rgba(6, 182, 212, 0.45);
     }
 
-    .btn-cta-primary i {
-        transition: transform 0.3s ease;
-    }
-
-    .btn-cta-primary:hover i {
-        transform: translateX(5px);
-    }
-
     .btn-cta-secondary {
-        background: rgba(255, 255, 255, 0.04);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #e2e8f0;
+        background: var(--lab-pill-bg);
+        border: 1px solid var(--lab-pill-border);
+        color: var(--lab-text-main) !important;
         font-weight: 600;
         padding: 14px 28px;
         border-radius: 50px;
@@ -156,38 +171,43 @@
     }
 
     .btn-cta-secondary:hover {
-        background: rgba(255, 255, 255, 0.1);
         border-color: var(--lab-cyan);
-        color: #ffffff;
+        color: var(--lab-cyan) !important;
         transform: translateY(-2px);
     }
 
     /* Icon Boxes */
     .icon-box-cyan {
-        background: rgba(6, 182, 212, 0.12);
+        background: var(--lab-cyan-subtle);
         color: var(--lab-cyan);
-        border: 1px solid rgba(6, 182, 212, 0.25);
+        border: 1px solid var(--lab-card-border);
     }
 
     .icon-box-emerald {
         background: rgba(16, 185, 129, 0.12);
-        color: var(--lab-emerald);
+        color: #10b981;
         border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
     .icon-box-amber {
         background: rgba(245, 158, 11, 0.12);
-        color: var(--lab-amber);
+        color: #f59e0b;
         border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .icon-box-rose {
+        background: rgba(244, 63, 94, 0.12);
+        color: #f43f5e;
+        border: 1px solid rgba(244, 63, 94, 0.25);
     }
 
     /* Pulse dot */
     .pulse-dot {
         width: 8px;
         height: 8px;
-        background-color: var(--lab-emerald);
+        background-color: #10b981;
         border-radius: 50%;
-        box-shadow: 0 0 10px var(--lab-emerald);
+        box-shadow: 0 0 10px #10b981;
         display: inline-block;
         animation: pulseGlow 1.8s infinite;
     }
@@ -197,11 +217,10 @@
         50% { transform: scale(1.4); opacity: 0.5; }
     }
 
-    /* Card Box & Animations */
     .cartoon-card-box {
-        background: linear-gradient(160deg, rgba(15, 23, 42, 0.85) 0%, rgba(11, 17, 31, 0.95) 100%);
-        border: 1px solid rgba(56, 189, 248, 0.25);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        background: var(--lab-card-bg) !important;
+        border: 1px solid var(--lab-card-border) !important;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
     }
 
     @keyframes cartoonFloat {
@@ -279,60 +298,33 @@
         font-size: 0.72rem;
         padding: 4px 10px;
         border-radius: 20px;
-        background: rgba(255, 255, 255, 0.06);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        color: #cbd5e1;
+        background: var(--lab-pill-bg);
+        border: 1px solid var(--lab-pill-border);
+        color: var(--lab-text-muted);
     }
 </style>
 
-<div class="welcome-fullscreen-overlay">
+<div class="admin-dashboard-fullwrapper">
     <!-- Ambient Glow Backgrounds -->
     <div class="ambient-glow-1"></div>
     <div class="ambient-glow-2"></div>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-expand-lg border-bottom border-secondary border-opacity-25 sticky-top py-3 px-4 px-lg-5" style="background: rgba(9, 13, 22, 0.85); backdrop-filter: blur(12px);">
-        <div class="container-fluid px-0">
-            <a class="navbar-brand fw-bold d-flex align-items-center gap-2 text-white text-decoration-none" href="#">
-                <div class="icon-box-cyan rounded-3 p-2 d-flex align-items-center justify-content-center" style="width: 38px; height: 38px;">
-                    <i class="bi bi-laptop fs-5"></i>
-                </div>
-                <span class="fs-5 tracking-tight">{{ config('app.name', 'SHEIN') }}</span>
-            </a>
-            
-            <div class="d-flex align-items-center gap-2">
-                @php 
-                    $currentUser = \App\Models\User::current(); 
-                @endphp
-                
-                @if($currentUser)
-                    <a href="{{ route('dashboard') }}" class="btn btn-cta-primary text-decoration-none py-2 px-4 fs-7">
-                        <i class="bi bi-speedometer2"></i> Dashboard
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="btn btn-cta-secondary text-decoration-none py-2 px-3.5 fs-7">Masuk</a>
-                    <a href="{{ route('register') }}" class="btn btn-cta-primary text-decoration-none py-2 px-3.5 fs-7">Daftar</a>
-                @endif
-            </div>
-        </div>
-    </nav>
-
     <!-- Hero Section -->
-    <section class="pt-5 pb-5 px-4 px-lg-5 position-relative">
+    <section class="pt-2 pb-5 position-relative" style="z-index: 2;">
         <div class="container-fluid px-0">
             <div class="row align-items-center g-5">
                 <!-- Sisi Kiri -->
                 <div class="col-lg-6 text-start">
-                    <span class="badge rounded-pill fw-semibold mb-3 px-3 py-2" style="background: rgba(6, 182, 212, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.3);">
+                    <span class="badge rounded-pill fw-semibold mb-3 px-3 py-2" style="background: var(--lab-cyan-subtle); color: var(--lab-cyan); border: 1px solid var(--lab-card-border);">
                         <i class="bi bi-door-open-fill me-1"></i> Sistem Peminjaman & Reservasi Lab Sekolah
                     </span>
                     
-                    <h1 class="display-5 fw-extrabold text-white mb-4 lh-sm">
+                    <h1 class="display-5 fw-extrabold mb-4 lh-sm" style="color: var(--lab-text-main);">
                         Kelola Akses & Peralatan Lab Sekolah Lebih <span class="text-gradient-lab">Efisien, Aman & Terstruktur</span>.
                     </h1>
                     
-                    <p class="fs-6 mb-4 lh-base" style="color: #94a3b8;">
-                        Platform terpadu untuk reservasi laboratorium kejuruan (<strong>Akuntansi, RPL, MPLB</strong>) serta peminjaman alat praktik sekolah secara mandiri dengan verifikasi <em>real-time</em>.
+                    <p class="fs-6 mb-4 lh-base" style="color: var(--lab-text-muted);">
+                        Platform terpadu untuk reservasi laboratorium kejuruan (<strong>Akuntansi, RPL, MPLB, Pemasaran</strong>) serta peminjaman alat praktik sekolah secara mandiri dengan verifikasi <em>real-time</em>.
                     </p>
 
                     <!-- Quick Indicator Cards -->
@@ -344,9 +336,9 @@
                                 </div>
                                 <div>
                                     <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                                        <span class="fw-bold text-white fs-6">Jadwal Bebas Bentrok</span>
+                                        <span class="fw-bold fs-6" style="color: var(--lab-text-main);">Jadwal Bebas Bentrok</span>
                                     </div>
-                                    <span class="small d-block" style="color: #94a3b8; font-size: 0.82rem;">Slot waktu otomatis terkunci & presisi.</span>
+                                    <span class="small d-block" style="color: var(--lab-text-muted); font-size: 0.82rem;">Slot waktu otomatis terkunci & presisi.</span>
                                 </div>
                             </div>
                         </div>
@@ -357,9 +349,9 @@
                                 </div>
                                 <div>
                                     <div class="d-flex align-items-center gap-1.5 mb-0.5">
-                                        <span class="fw-bold text-white fs-6">Inventaris Alat & Unit</span>
+                                        <span class="fw-bold fs-6" style="color: var(--lab-text-main);">Inventaris Alat & Unit</span>
                                     </div>
-                                    <span class="small d-block" style="color: #94a3b8; font-size: 0.82rem;">Pelacakan kondisi barang *real-time*.</span>
+                                    <span class="small d-block" style="color: var(--lab-text-muted); font-size: 0.82rem;">Pelacakan kondisi barang *real-time*.</span>
                                 </div>
                             </div>
                         </div>
@@ -367,6 +359,7 @@
                     
                     <!-- Call To Action Buttons -->
                     <div class="d-flex flex-wrap gap-3 align-items-center">
+                        @php $currentUser = \App\Models\User::current(); @endphp
                         @if($currentUser)
                             <a href="{{ route('dashboard') }}" class="btn-cta-primary text-decoration-none">
                                 <span>Buka Dashboard</span>
@@ -385,27 +378,24 @@
                     </div>
                 </div>
                 
-                <!-- Sisi Kanan: ANIMASI KARTUN VEKTOR LAB AKUNTANSI, RPL & MPLB -->
+                <!-- Sisi Kanan: ILUSTRASI KARTUN SVG -->
                 <div class="col-lg-6">
                     <div class="cartoon-card-box p-4 rounded-4 position-relative overflow-hidden">
-                        
-                        <!-- Header Status Card -->
                         <div class="d-flex align-items-center justify-content-between mb-2 position-relative" style="z-index: 5;">
                             <div class="d-flex align-items-center gap-2">
                                 <span class="badge rounded-circle p-2 icon-box-cyan d-inline-flex align-items-center justify-content-center" style="width: 34px; height: 34px;">
                                     <i class="bi bi-pc-display-horizontal fs-6"></i>
                                 </span>
                                 <div>
-                                    <h6 class="fw-bold mb-0 text-white fs-6">Aktivitas Peminjaman Lab Kejuruan</h6>
-                                    <span class="small" style="color: #94a3b8; font-size: 0.75rem;">Lab Akuntansi, RPL & MPLB</span>
+                                    <h6 class="fw-bold mb-0 fs-6" style="color: var(--lab-text-main);">Aktivitas Peminjaman Lab Kejuruan</h6>
+                                    <span class="small" style="color: var(--lab-text-muted); font-size: 0.75rem;">Lab Akuntansi, RPL, MPLB & Pemasaran</span>
                                 </div>
                             </div>
-                            <span class="badge rounded-pill px-3 py-1.5 small fw-semibold d-flex align-items-center gap-2" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(52, 211, 153, 0.3);">
+                            <span class="badge rounded-pill px-3 py-1.5 small fw-semibold d-flex align-items-center gap-2" style="background: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid rgba(52, 211, 153, 0.3);">
                                 <span class="pulse-dot"></span> Sesi Berlangsung
                             </span>
                         </div>
 
-                        <!-- ILUSTRASI KARTUN SVG -->
                         <div class="position-relative d-flex justify-content-center py-2" style="z-index: 3;">
                             <svg viewBox="0 0 500 340" class="w-100 h-auto" style="max-height: 310px;" xmlns="http://www.w3.org/2000/svg">
                                 <defs>
@@ -445,7 +435,7 @@
                                     <line x1="12" y1="48" x2="40" y2="48" stroke="#fbbf24" stroke-width="3" stroke-linecap="round"/>
                                 </g>
 
-                                <!-- LAYAR MONITOR 2 (AKUNTANSI & MPLB) -->
+                                <!-- LAYAR MONITOR 2 (AKUNTANSI & PEMASARAN) -->
                                 <g transform="translate(325, 140)">
                                     <rect x="0" y="0" width="100" height="70" rx="6" fill="url(#screenGrad)" stroke="#10b981" stroke-width="2"/>
                                     <rect x="40" y="70" width="20" height="25" fill="#334155"/>
@@ -512,25 +502,24 @@
                         <!-- Footer Ringkas di Bawah Card -->
                         <div class="row g-2 mt-1 position-relative" style="z-index: 5;">
                             <div class="col-6">
-                                <div class="p-2.5 rounded-3 d-flex align-items-center gap-2" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(56, 189, 248, 0.2); backdrop-filter: blur(8px);">
+                                <div class="p-2.5 rounded-3 d-flex align-items-center gap-2" style="background: var(--lab-pill-bg); border: 1px solid var(--lab-pill-border);">
                                     <i class="bi bi-person-badge-fill text-cyan fs-5"></i>
                                     <div>
-                                        <span class="d-block text-white fw-bold" style="font-size: 0.78rem;">Siswa / Guru</span>
-                                        <span class="small" style="color: #94a3b8; font-size: 0.7rem;">Otorisasi Pengguna</span>
+                                        <span class="d-block fw-bold" style="font-size: 0.78rem; color: var(--lab-text-main);">Siswa / Guru</span>
+                                        <span class="small" style="color: var(--lab-text-muted); font-size: 0.7rem;">Otorisasi Pengguna</span>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-6">
-                                <div class="p-2.5 rounded-3 d-flex align-items-center gap-2" style="background: rgba(255,255,255,0.04); border: 1px solid rgba(52, 211, 153, 0.2); backdrop-filter: blur(8px);">
+                                <div class="p-2.5 rounded-3 d-flex align-items-center gap-2" style="background: var(--lab-pill-bg); border: 1px solid var(--lab-pill-border);">
                                     <i class="bi bi-check-circle-fill text-emerald fs-5"></i>
                                     <div>
-                                        <span class="d-block text-white fw-bold" style="font-size: 0.78rem;">Log Digital</span>
-                                        <span class="small" style="color: #94a3b8; font-size: 0.7rem;">Otomatis Terdata</span>
+                                        <span class="d-block fw-bold" style="font-size: 0.78rem; color: var(--lab-text-main);">Log Digital</span>
+                                        <span class="small" style="color: var(--lab-text-muted); font-size: 0.7rem;">Otomatis Terdata</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -538,40 +527,40 @@
     </section>
 
     <!-- Showcase Kategori Lab -->
-    <section id="kategori-lab" class="py-5 px-4 px-lg-5 border-top border-secondary border-opacity-25" style="background: linear-gradient(180deg, rgba(13, 19, 34, 0.7) 0%, rgba(9, 13, 22, 0.95) 100%);">
+    <section id="kategori-lab" class="py-5 border-top border-secondary border-opacity-15">
         <div class="container-fluid px-0">
             <div class="d-flex flex-column flex-md-row align-items-md-end justify-content-between mb-4 pb-2">
                 <div>
-                    <span class="badge rounded-pill px-3 py-1.5 fw-semibold mb-2" style="background: rgba(6, 182, 212, 0.12); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.25);">
+                    <span class="badge rounded-pill px-3 py-1.5 fw-semibold mb-2" style="background: var(--lab-cyan-subtle); color: var(--lab-cyan); border: 1px solid var(--lab-card-border);">
                         Fasilitas Kejuruan
                     </span>
-                    <h2 class="fw-extrabold text-white mb-0 fs-3">Pilihan Laboratorium Utama</h2>
+                    <h2 class="fw-extrabold mb-0 fs-3" style="color: var(--lab-text-main);">Pilihan Laboratorium Utama</h2>
                 </div>
                 <div class="mt-2 mt-md-0">
-                    <span class="small d-flex align-items-center gap-2" style="color: #94a3b8;">
+                    <span class="small d-flex align-items-center gap-2" style="color: var(--lab-text-muted);">
                         <i class="bi bi-shield-check text-emerald"></i> Terintegrasi dengan jadwal KBM & Praktikum Mandiri
                     </span>
                 </div>
             </div>
 
-            <!-- Tiga Lab Utama Sekolah -->
+            <!-- Daftar Lab Utama Sekolah (4 Kolom) -->
             <div class="row g-4">
                 <!-- 1. Lab Akuntansi -->
-                <div class="col-md-4">
+                <div class="col-md-6 col-lg-3">
                     <div class="lab-glass-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div class="icon-box-emerald rounded-3 p-3 d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                     <i class="bi bi-calculator-fill fs-4"></i>
                                 </div>
-                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.15); color: #34d399; font-size: 0.72rem;">Aktif</span>
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(16, 185, 129, 0.15); color: #10b981; font-size: 0.72rem;">Aktif</span>
                             </div>
-                            <h5 class="fw-bold text-white fs-5 mb-2">Lab Akuntansi</h5>
-                            <p class="small mb-4 lh-base" style="color: #94a3b8;">
-                                Dilengkapi Komputer Akuntansi, Software Keuangan (Accurate, MYOB), Kalkulator Finansial, serta fasilitas pencetakan laporan keuangan.
+                            <h5 class="fw-bold fs-5 mb-2" style="color: var(--lab-text-main);">Lab Akuntansi</h5>
+                            <p class="small mb-4 lh-base" style="color: var(--lab-text-muted);">
+                                Komputer Akuntansi, Software Keuangan (Accurate, MYOB), Kalkulator Finansial, dan fasilitas pencetakan laporan.
                             </p>
                         </div>
-                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-15">
                             <span class="lab-tag-pill">Software Accurate</span>
                             <span class="lab-tag-pill">MYOB</span>
                             <span class="lab-tag-pill">PC Akuntansi</span>
@@ -580,47 +569,70 @@
                 </div>
 
                 <!-- 2. Lab RPL -->
-                <div class="col-md-4">
+                <div class="col-md-6 col-lg-3">
                     <div class="lab-glass-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div class="icon-box-cyan rounded-3 p-3 d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                     <i class="bi bi-code-slash fs-4"></i>
                                 </div>
-                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(6, 182, 212, 0.15); color: #38bdf8; font-size: 0.72rem;">Aktif</span>
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: var(--lab-cyan-subtle); color: var(--lab-cyan); font-size: 0.72rem;">Aktif</span>
                             </div>
-                            <h5 class="fw-bold text-white fs-5 mb-2">Lab RPL (Software Engineering)</h5>
-                            <p class="small mb-4 lh-base" style="color: #94a3b8;">
-                                Unit PC High-Spec, Dual Monitor, Server Lokal, IDE Pemrograman modern, serta jaringan LAN dedicated untuk praktikum coding.
+                            <h5 class="fw-bold fs-5 mb-2" style="color: var(--lab-text-main);">Lab RPL</h5>
+                            <p class="small mb-4 lh-base" style="color: var(--lab-text-muted);">
+                                Unit PC High-Spec, Server Lokal, IDE Pemrograman modern, serta jaringan LAN dedicated untuk praktikum coding.
                             </p>
                         </div>
-                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-15">
                             <span class="lab-tag-pill">PC High-Spec</span>
-                            <span class="lab-tag-pill">IDE & Dev Tools</span>
+                            <span class="lab-tag-pill">Dev Tools</span>
                             <span class="lab-tag-pill">LAN Cepat</span>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. Lab MPLB -->
-                <div class="col-md-4">
+                <div class="col-md-6 col-lg-3">
                     <div class="lab-glass-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between">
                         <div>
                             <div class="d-flex align-items-center justify-content-between mb-3">
                                 <div class="icon-box-amber rounded-3 p-3 d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                     <i class="bi bi-briefcase-fill fs-4"></i>
                                 </div>
-                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; font-size: 0.72rem;">Aktif</span>
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(245, 158, 11, 0.15); color: #f59e0b; font-size: 0.72rem;">Aktif</span>
                             </div>
-                            <h5 class="fw-bold text-white fs-5 mb-2">Lab MPLB</h5>
-                            <p class="small mb-4 lh-base" style="color: #94a3b8;">
-                                Fasilitas perkantoran modern, PC Perkantoran, Printer/Scanner multifungsi, perangkat komunikasi interkom, dan unit penataan arsip.
+                            <h5 class="fw-bold fs-5 mb-2" style="color: var(--lab-text-main);">Lab MPLB</h5>
+                            <p class="small mb-4 lh-base" style="color: var(--lab-text-muted);">
+                                Fasilitas perkantoran modern, PC Perkantoran, Printer/Scanner multifungsi, interkom, dan unit penataan arsip.
                             </p>
                         </div>
-                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-25">
+                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-15">
                             <span class="lab-tag-pill">Simulasi Kantor</span>
                             <span class="lab-tag-pill">Printer Scan</span>
                             <span class="lab-tag-pill">Arsip Digital</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Lab Pemasaran -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="lab-glass-card p-4 rounded-4 h-100 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div class="icon-box-rose rounded-3 p-3 d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                                    <i class="bi bi-shop fs-4"></i>
+                                </div>
+                                <span class="badge rounded-pill px-2.5 py-1" style="background: rgba(244, 63, 94, 0.15); color: #f43f5e; font-size: 0.72rem;">Aktif</span>
+                            </div>
+                            <h5 class="fw-bold fs-5 mb-2" style="color: var(--lab-text-main);">Lab Pemasaran</h5>
+                            <p class="small mb-4 lh-base" style="color: var(--lab-text-muted);">
+                                Mesin Kasir POS, Barcode Scanner, Studio Live Streaming & Digital Marketing, serta peralatan Display/Visual Merchandising.
+                            </p>
+                        </div>
+                        <div class="d-flex flex-wrap gap-1.5 pt-3 border-top border-secondary border-opacity-15">
+                            <span class="lab-tag-pill">Mesin POS</span>
+                            <span class="lab-tag-pill">Live Studio</span>
+                            <span class="lab-tag-pill">Barcode Scanner</span>
                         </div>
                     </div>
                 </div>
@@ -629,86 +641,43 @@
     </section>
 
     <!-- Panduan Penggunaan Aplikasi -->
-    <section id="panduan" class="py-5 border-top border-secondary border-opacity-25 px-4 px-lg-5" style="background: #090d16;">
-        <div class="container-fluid px-0 py-2">
+    <section id="panduan" class="py-5 border-top border-secondary border-opacity-15">
+        <div class="container-fluid px-0">
             <div class="text-center mb-5">
-                <span class="badge rounded-pill px-3 py-1.5 fw-semibold mb-2" style="background: rgba(139, 92, 246, 0.12); color: #c084fc; border: 1px solid rgba(139, 92, 246, 0.25);">
-                    Alur Kerja Praktis
+                <span class="badge rounded-pill px-3 py-1.5 fw-semibold mb-2" style="background: rgba(139, 92, 246, 0.12); color: #a78bfa; border: 1px solid rgba(139, 92, 246, 0.25);">
+                    Alur & Prosedur
                 </span>
-                <h2 class="fw-bold text-white mt-1">Langkah Mudah Penggunaan Sistem</h2>
-                <p style="color: #94a3b8; max-width: 600px; margin: 0 auto;" class="fs-6">
-                    Tiga tahap sederhana untuk mengajukan peminjaman laboratorium dan peralatan praktik kejuruan.
-                </p>
+                <h2 class="fw-extrabold fs-3" style="color: var(--lab-text-main);">Cara Menggunakan SHEIN</h2>
+                <p class="small mx-auto" style="max-width: 500px; color: var(--lab-text-muted);">Langkah mudah bagi siswa dan guru untuk melakukan reservasi laboratorium dan peminjaman alat praktik.</p>
             </div>
 
             <div class="row g-4">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="lab-glass-card p-4 rounded-4 h-100 position-relative">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="step-number-badge">1</div>
-                            <span class="fw-bold text-white fs-6">Autentikasi Akun</span>
-                        </div>
-                        <h4 class="fw-semibold fs-6 text-white mb-2">Login / Registrasi</h4>
-                        <p class="small mb-0 lh-base" style="color: #94a3b8;">
-                            Masuk dengan akun Guru atau Siswa terverifikasi untuk membuka otorisasi jadwal dan peminjaman alat lab.
-                        </p>
+                        <div class="step-number-badge mb-3">01</div>
+                        <h5 class="fw-bold fs-6 mb-2" style="color: var(--lab-text-main);">Login Akun</h5>
+                        <p class="small mb-0" style="color: var(--lab-text-muted);">Masuk menggunakan akun siswa, guru, atau petugas yang telah terdaftar di sistem sekolah.</p>
                     </div>
                 </div>
-
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="lab-glass-card p-4 rounded-4 h-100 position-relative">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="step-number-badge">2</div>
-                            <span class="fw-bold text-white fs-6">Reservasi Mandiri</span>
-                        </div>
-                        <h4 class="fw-semibold fs-6 text-white mb-2">Pilih Lab & Waktu Slot</h4>
-                        <p class="small mb-0 lh-base" style="color: #94a3b8;">
-                            Tentukan laboratorium (Akuntansi, RPL, MPLB) beserta durasi dan daftar unit barang praktik yang dibutuhkan.
-                        </p>
+                        <div class="step-number-badge mb-3">02</div>
+                        <h5 class="fw-bold fs-6 mb-2" style="color: var(--lab-text-main);">Pilih Alat / Lab</h5>
+                        <p class="small mb-0" style="color: var(--lab-text-muted);">Cari perangkat kejuruan (Akuntansi, RPL, MPLB, Pemasaran) atau slot laboratorium yang tersedia.</p>
                     </div>
                 </div>
-
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="lab-glass-card p-4 rounded-4 h-100 position-relative">
-                        <div class="d-flex align-items-center gap-3 mb-3">
-                            <div class="step-number-badge">3</div>
-                            <span class="fw-bold text-white fs-6">Verifikasi & Pengembalian</span>
-                        </div>
-                        <h4 class="fw-semibold fs-6 text-white mb-2">Pencatatan Otomatis</h4>
-                        <p class="small mb-0 lh-base" style="color: #94a3b8;">
-                            Selesai praktikum, petugas melakukan konfirmasi pengembalian dan log aktivitas otomatis tersimpan di database.
-                        </p>
+                        <div class="step-number-badge mb-3">03</div>
+                        <h5 class="fw-bold fs-6 mb-2" style="color: var(--lab-text-main);">Ajukan Permintaan</h5>
+                        <p class="small mb-0" style="color: var(--lab-text-muted);">Isi formulir peminjaman dan tunggu verifikasi secara real-time oleh petugas lab.</p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Ringkasan CTA Banner -->
-    <section class="py-5 px-4 px-lg-5 border-top border-secondary border-opacity-25" style="background: rgba(13, 19, 34, 0.85);">
-        <div class="container-fluid px-0">
-            <div class="p-4 p-lg-5 rounded-4 position-relative overflow-hidden shadow-lg" style="background: linear-gradient(135deg, rgba(6, 182, 212, 0.9) 0%, rgba(59, 130, 246, 0.9) 50%, rgba(139, 92, 246, 0.9) 100%); border: 1px solid rgba(255, 255, 255, 0.2);">
-                <div class="row align-items-center position-relative" style="z-index: 1;">
-                    <div class="col-lg-8">
-                        <div class="d-flex align-items-center gap-2 mb-2">
-                            <span class="badge bg-white text-dark fw-bold rounded-pill px-3 py-1" style="font-size: 0.75rem;">SHEIN SMK</span>
-                            <span class="text-white-50 small"><i class="bi bi-clock-history me-1"></i> Layanan Real-time</span>
-                        </div>
-                        <h3 class="fw-extrabold mb-2 text-white">Siap Melakukan Pemesanan Jadwal Praktikum?</h3>
-                        <p class="text-white-50 mb-0 fs-6">
-                            Gunakan sistem peminjaman terpadu untuk memastikan ketersediaan ruangan dan alat praktik sekolah secara efisien.
-                        </p>
-                    </div>
-                    <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
-                        @if($currentUser)
-                            <a href="{{ route('dashboard') }}" class="btn btn-light btn-lg px-4 fw-bold rounded-pill text-dark shadow-sm">
-                                Masuk Dashboard <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        @else
-                            <a href="{{ route('register') }}" class="btn btn-light btn-lg px-4 fw-bold rounded-pill text-dark shadow-sm">
-                                Daftar Sekarang <i class="bi bi-arrow-right ms-1"></i>
-                            </a>
-                        @endif
+                <div class="col-md-3">
+                    <div class="lab-glass-card p-4 rounded-4 h-100 position-relative">
+                        <div class="step-number-badge mb-3">04</div>
+                        <h5 class="fw-bold fs-6 mb-2" style="color: var(--lab-text-main);">Pengembalian & Selesai</h5>
+                        <p class="small mb-0" style="color: var(--lab-text-muted);">Kembalikan alat tepat waktu dengan kondisi baik untuk menutup status transaksi.</p>
                     </div>
                 </div>
             </div>
@@ -716,13 +685,16 @@
     </section>
 
     <!-- Footer -->
-    <footer class="py-4 border-top border-secondary border-opacity-25 text-center px-4 px-lg-5" style="background: #090d16;">
-        <div class="container-fluid px-0">
-            <p class="small mb-0" style="color: #64748b;">
-                &copy; {{ date('Y') }} <strong>SHEIN</strong>. Sistem Peminjaman & Reservasi Lab Sekolah Berbasis Sakuci Framework.
-            </p>
+    <footer class="py-4 mt-4 border-top border-secondary border-opacity-15 text-center text-md-start">
+        <div class="container-fluid px-0 d-flex flex-column flex-md-row align-items-center justify-content-between gap-3">
+            <div class="d-flex align-items-center gap-2">
+                <div class="icon-box-cyan rounded-3 p-1.5 d-flex align-items-center justify-content-center" style="width: 30px; height: 30px;">
+                    <i class="bi bi-laptop fs-6"></i>
+                </div>
+                <span class="fw-bold small" style="color: var(--lab-text-main);">{{ config('app.name', 'SHEIN') }} — Sistem Inventaris Lab Sekolah</span>
+            </div>
+            <p class="small mb-0" style="color: var(--lab-text-muted);">&copy; {{ date('Y') }} SMK Kejuruan. Hak cipta dilindungi undang-undang.</p>
         </div>
     </footer>
-
 </div>
 @endsection
