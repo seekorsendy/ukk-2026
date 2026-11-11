@@ -26,7 +26,7 @@
                 <div class="mb-3">
                     <label for="id_user" class="form-label fw-semibold">Pilih User / Peminjam</label>
                     <select name="id_user" id="id_user" class="form-select" required>
-                        <option value="">-- Pilih User --</option>
+                        <option value="" disabled selected>-- Pilih User --</option>
                         @foreach($users as $user)
                             <option value="{{ $user->id }}">{{ $user->nama ?? $user->name ?? $user->username }}</option>
                         @endforeach
@@ -36,9 +36,10 @@
                 <div class="mb-3">
                     <label for="id_alat" class="form-label fw-semibold">Pilih Alat</label>
                     <select name="id_alat" id="id_alat" class="form-select" required>
-                        <option value="">-- Pilih Alat --</option>
+                        <option value="" disabled selected>-- Pilih Alat --</option>
                         @foreach($alat as $item)
-                            <option value="{{ $item->id }}">{{ $item->nama_alat ?? $item->nama }}</option>
+                            <!-- PERBAIKAN: Menggunakan id_alat sesuai primary key di database -->
+                            <option value="{{ $item->id_alat ?? $item->id }}">{{ $item->nama_alat ?? $item->nama }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -62,17 +63,8 @@
                 <div class="mb-3">
                     <label for="status" class="form-label fw-semibold">Status Peminjaman</label>
                     <select name="status" id="status" class="form-select" required>
-                        <option value="Pending" selected>Pending</option>
                         <option value="Disetujui">Disetujui</option>
-                        <option value="Ditolak">Ditolak</option>
-                        <option value="Dipinjam">Dipinjam</option>
-                        <option value="Dikembalikan">Dikembalikan</option>
                     </select>
-                </div>
-
-                <div class="mb-4">
-                    <label for="denda" class="form-label fw-semibold">Denda (Rp)</label>
-                    <input type="number" name="denda" id="denda" class="form-control" value="0" min="0">
                 </div>
 
                 <div class="d-flex justify-content-end gap-2">
